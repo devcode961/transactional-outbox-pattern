@@ -1,0 +1,35 @@
+POSTGRES_HOST: localhost
+POSTGRES_PORT: 5432
+POSTGRES_DB: outbox
+POSTGRES_USER: outbox
+POSTGRES_PASSWORD: outbox
+POSTGRES_SCHEMA: public
+
+spring:
+  kafka:
+    bootstrap-servers: http://localhost:9092
+  jpa:
+    database: POSTGRESQL
+    show-sql: false
+    hibernate:
+      ddlAuto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: false
+  datasource:
+    url: jdbc:postgresql://${POSTGRES_HOST:localhost}:${POSTGRES_PORT:5432}/${POSTGRES_DB:outbox}?currentSchema=${POSTGRES_SCHEMA:public}&stringtype=unspecified
+    username: ${POSTGRES_USER:outbox}
+    password: ${POSTGRES_PASSWORD:outbox}
+    driver-class-name: org.postgresql.Driver
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    schemas: ${POSTGRES_SCHEMA:public}
+logging:
+  level:
+    com.example: debug
+    org.apache.kafka: error
+    kafka: error
+    state.change: error
